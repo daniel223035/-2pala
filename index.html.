@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>@2pala AI Studio</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101114;color:#fff;font-family:Arial,sans-serif}
+header{padding:25px;border-bottom:1px solid #333;display:flex;justify-content:space-between}
+.logo{font-size:30px;font-weight:bold}.logo span{color:#c8ff3d}
+main{max-width:1000px;margin:auto;padding:25px}
+h1{font-size:42px;margin-bottom:8px}
+p{color:#aaa}
+.panel{background:#191b20;border:1px solid #333;border-radius:16px;padding:22px;margin:20px 0}
+.upload{border:2px dashed #666;padding:45px 15px;text-align:center;border-radius:12px}
+input[type=file]{max-width:100%;margin-top:15px}
+img,video{max-width:100%;max-height:350px;margin-top:15px;border-radius:10px}
+.tools{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+button{background:#252830;color:white;border:1px solid #444;padding:17px;border-radius:10px;cursor:pointer}
+button:hover,button.active{border-color:#c8ff3d}
+.primary{background:#c8ff3d;color:#111;font-weight:bold;border:0}
+#status{color:#c8ff3d;margin-top:15px}
+.overlay{position:fixed;inset:0;background:#08090bf5;display:flex;align-items:center;justify-content:center;padding:20px;z-index:5}
+.gate{background:#191b20;border:1px solid #444;border-radius:18px;padding:30px;max-width:400px;text-align:center}
+.gate button{width:100%;margin-top:10px}
+footer{padding:30px;color:#777;text-align:center}
+@media(max-width:550px){.tools{grid-template-columns:1fr}h1{font-size:34px}}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="age">
+ <div class="gate">
+  <div class="logo">@<span>2pala</span></div>
+  <h2>Acceso exclusivo +18</h2>
+  <p>Esta plataforma es exclusivamente para adultos.</p>
+  <button class="primary" onclick="enter()">SOY MAYOR DE 18 AÑOS</button>
+  <button onclick="alert('Acceso denegado')">SOY MENOR DE 18</button>
+ </div>
+</div>
+
+<header>
+ <div class="logo">@<span>2pala</span></div>
+ <small>PRIVATE AI STUDIO</small>
+</header>
+
+<main>
+ <h1>Tu imagen.<br><span style="color:#c8ff3d">Tu control.</span></h1>
+ <p>Estudio privado de edición fotográfica y audiovisual con inteligencia artificial.</p>
+
+ <section class="panel">
+  <h3>01 · CARGAR ARCHIVO</h3>
+  <div class="upload">
+   <p>Seleccioná una fotografía o video</p>
+   <input type="file" id="file" accept="image/*,video/*">
+   <div id="preview"></div>
+  </div>
+ </section>
+
+ <section class="panel">
+  <h3>02 · HERRAMIENTAS IA</h3>
+  <div class="tools">
+   <button onclick="selectTool(this,'Mejorar calidad')">✨<br>Mejorar calidad</button>
+   <button onclick="selectTool(this,'Eliminar tatuajes')">◉<br>Eliminar tatuajes</button>
+   <button onclick="selectTool(this,'Censurar rostros')">▦<br>Censurar rostros</button>
+   <button onclick="selectTool(this,'Procesar video')">▶<br>Procesar videos</button>
+  </div>
+  <p id="status">Seleccioná una herramienta.</p>
+  <button class="primary" onclick="process()">PROCESAR CON IA</button>
+ </section>
+
+ <section class="panel">
+  <h3>03 · GOOGLE DRIVE</h3>
+  <p>Importación de fotografías y videos desde tu cuenta de Google.</p>
+  <button onclick="drive()">CONECTAR GOOGLE DRIVE</button>
+ </section>
+</main>
+
+<footer>© 2026 @2pala · PRIVATE AI STUDIO</footer>
+
+<script>
+let selected='';
+function enter(){
+ sessionStorage.setItem('adult2pala','yes');
+ document.getElementById('age').style.display='none';
+}
+if(sessionStorage.getItem('adult2pala')==='yes'){
+ document.getElementById('age').style.display='none';
+}
+document.getElementById('file').onchange=function(){
+ const f=this.files[0];
+ if(!f)return;
+ const url=URL.createObjectURL(f);
+ const preview=document.getElementById('preview');
+ preview.innerHTML='';
+ const el=document.createElement(f.type.startsWith('video/')?'video':'img');
+ el.src=url;
+ if(el.tagName==='VIDEO')el.controls=true;
+ preview.appendChild(el);
+};
+function selectTool(btn,name){
+ selected=name;
+ document.querySelectorAll('.tools button').forEach(b=>b.classList.remove('active'));
+ btn.classList.add('active');
+ document.getElementById('status').textContent='Herramienta seleccionada: '+name;
+}
+function process(){
+ if(!document.getElementById('file').files.length){
+  alert('Primero cargá un archivo.');
+  return;
+ }
+ if(!selected){
+  alert('Seleccioná una herramienta.');
+  return;
+ }
+ document.getElementById('status').textContent=
+ 'Interfaz preparada. Falta conectar el motor de IA para ejecutar: '+selected+'.';
+}
+function drive(){
+ alert('La conexión con Google Drive requiere configurar las credenciales de Google Cloud.');
+}
+</script>
+</body>
+</html>
